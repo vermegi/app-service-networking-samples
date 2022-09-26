@@ -34,7 +34,7 @@ jobs:
   #        parameters: name=${{ env.AZURE_RESOURCEGROUP_NAME }} aadUsername=${{ secrets.AAD_USERNAME }} aadSid=${{ secrets.AAD_SID }} 
   database-updates:
     runs-on: ubuntu-latest
-    needs: deploy-infra
+  #  needs: deploy-infra
     steps:
      - uses: actions/checkout@v2
      - name: Azure SQL Allow MI 
