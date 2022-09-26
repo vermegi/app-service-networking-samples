@@ -6,35 +6,35 @@ env:
     AZURE_RESOURCEGROUP_NAME: appsvcnetworkingdemo # Be sure to use all lowercase values for the name. 
 
 jobs:
-  # deploy-infra:
-  #   runs-on: ubuntu-latest
-  #   outputs: 
-  #     sqlServerFullyQualifiedDomainName: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
-  #     sqlDatabaseName: ${{ steps.deploy.outputs.sqlDatabaseName }}      
-  #   steps:
-  #    - uses: actions/checkout@v2
-  #    - uses: azure/login@v1
-  #      name: Sign in to Azure
-  #      with:
-  #        creds: ${{ secrets.AZURE_CREDENTIALS }}    
-  #   #  - uses: Azure/cli@v1
-  #   #    name: Fetch AAD Info
-  #   #    id: fetchInfo
-  #   #    with:
-  #   #     inlineScript: |
-  #   #        aadSid=$(az ad user show --id ${{ secrets.AAD_USERNAME }} --query objectId -o tsv)
-  #   #        echo "::set-output name=aadSid::$aadSid"
-  #    - uses: azure/arm-deploy@v1
-  #      id: deploy
-  #      name: Deploy Bicep
-  #      with:
-  #        deploymentName: ${{ github.run_number }}
-  #        resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-  #        template: ./deploy/main.bicep
-  #        parameters: name=${{ env.AZURE_RESOURCEGROUP_NAME }} aadUsername=${{ secrets.AAD_USERNAME }} aadSid=${{ secrets.AAD_SID }} 
+  deploy-infra:
+    runs-on: ubuntu-latest
+    outputs: 
+      sqlServerFullyQualifiedDomainName: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
+      sqlDatabaseName: ${{ steps.deploy.outputs.sqlDatabaseName }}      
+    steps:
+     - uses: actions/checkout@v2
+     - uses: azure/login@v1
+       name: Sign in to Azure
+       with:
+         creds: ${{ secrets.AZURE_CREDENTIALS }}    
+    #  - uses: Azure/cli@v1
+    #    name: Fetch AAD Info
+    #    id: fetchInfo
+    #    with:
+    #     inlineScript: |
+    #        aadSid=$(az ad user show --id ${{ secrets.AAD_USERNAME }} --query objectId -o tsv)
+    #        echo "::set-output name=aadSid::$aadSid"
+     - uses: azure/arm-deploy@v1
+       id: deploy
+       name: Deploy Bicep
+       with:
+         deploymentName: ${{ github.run_number }}
+         resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+         template: ./deploy/main.bicep
+         parameters: name=${{ env.AZURE_RESOURCEGROUP_NAME }} aadUsername=${{ secrets.AAD_USERNAME }} aadSid=${{ secrets.AAD_SID }} 
   database-updates:
     runs-on: ubuntu-latest
-  #  needs: deploy-infra
+    needs: deploy-infra
     steps:
      - uses: actions/checkout@v2
      - name: Azure SQL Allow MI 
@@ -43,7 +43,7 @@ jobs:
          # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
          # server-name: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
          # The connection string, including authentication information, for the Azure SQL Server database.
-         connection-string: ${{ format('Server={0};Initial Catalog={1};Authentication="Active Directory Service Principal";User Id={2};Password={3}', 'appsvcnetworkingdemoxprjxhuoxapcy', 'sampledb', secrets.SQL_USERNAME, secrets.SQL_PASSWORD) }}
+         connection-string: ${{ format('Server={0};Initial Catalog={1};Authentication="Active Directory Service Principal";User Id={2};Password={3}', ${{ needs.deploy.outputs.sqlServerFullyQualifiedDomainName }}, ${{ needs.deploy.outputs.sqlDatabaseName }}, secrets.SQL_USERNAME, secrets.SQL_PASSWORD) }}
          # Path to SQL script file to deploy
          path: ./deploy/mi.sql
          # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
