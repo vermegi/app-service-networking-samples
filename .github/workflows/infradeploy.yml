@@ -24,9 +24,6 @@ jobs:
      - uses: azure/arm-deploy@v1
        id: deploy
        name: Deploy Bicep
-       outputs:
-        sqlServerFullyQualifiedDomainName: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
-        databaseName: ${{ steps.deploy.outputs.databaseName }}
        with:
          deploymentName: ${{ github.run_number }}
          resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
