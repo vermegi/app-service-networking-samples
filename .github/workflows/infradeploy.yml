@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs: 
       sqlServerFullyQualifiedDomainName: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
-      sqlDatabaseName: ${{ steps.deploy.outputs.sqlDatabaseName }}      
+      sqlDatabaseName: ${{ steps.deploy.outputs.databaseName }}      
     steps:
      - uses: actions/checkout@v2
      - uses: azure/login@v1
