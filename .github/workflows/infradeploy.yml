@@ -33,10 +33,10 @@ jobs:
        uses: Azure/sql-action@v2
        with:
          # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
-         server-name: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
+         # server-name: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
          # The connection string, including authentication information, for the Azure SQL Server database.
          connection-string: ${{ format('Server={0};Initial Catalog={1};Authentication=Active Directory Service Principal;User Id={2};Password={3}', steps.deploy.outputs.sqlServerFullyQualifiedDomainName, steps.deploy.outputs.databaseName, secrets.SQL_USERNAME, secrets.SQL_PASSWORD) }}
          # Path to SQL script file to deploy
-         sql-file: ./deploy/mi.sql
+         path: ./deploy/mi.sql
          # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
          # arguments: -v accountName=${{ steps.deploy.outputs.principalId }} # optional
