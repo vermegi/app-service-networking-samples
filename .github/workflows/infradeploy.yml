@@ -31,7 +31,7 @@ jobs:
          deploymentName: ${{ github.run_number }}
          resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
          template: ./deploy/main.bicep
-         parameters: name=${{ env.AZURE_RESOURCEGROUP_NAME }} aadUsername=${{ secrets.AAD_USERNAME }} aadSid=${{ secrets.SQL_USERNAME }} 
+         parameters: name=${{ env.AZURE_RESOURCEGROUP_NAME }} aadUsername=${{ secrets.AAD_USERNAME }} aadSid=${{ secrets.SP_OID }} 
   database-updates:
     runs-on: ubuntu-latest
     needs: deploy-infra
