@@ -8,9 +8,9 @@ env:
 jobs:
   deploy-infra:
     runs-on: ubuntu-latest
-    outputs: 
-      sqlServerFullyQualifiedDomainName: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
-      sqlDatabaseName: ${{ steps.deploy.outputs.databaseName }}      
+    # outputs: 
+    #   sqlServerFullyQualifiedDomainName: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
+    #   sqlDatabaseName: ${{ steps.deploy.outputs.databaseName }}      
     steps:
      - uses: actions/checkout@v2
      - uses: azure/login@v1
@@ -43,7 +43,7 @@ jobs:
          # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
          # server-name: ${{ steps.deploy.outputs.sqlServerFullyQualifiedDomainName }}
          # The connection string, including authentication information, for the Azure SQL Server database.
-         connection-string: ${{ format('Server={0};Initial Catalog={1};Authentication="Active Directory Default";', needs.deploy-infra.outputs.sqlServerFullyQualifiedDomainName , needs.deploy-infra.outputs.sqlDatabaseName) }}
+         connection-string: ${{ format('Server={0};Initial Catalog={1};Authentication="Active Directory Default";', steps.deploy.outputs.sqlServerFullyQualifiedDomainName , steps.deploy.outputs.databaseName) }}
          # Path to SQL script file to deploy
          path: ./deploy/mi.sql
          # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
