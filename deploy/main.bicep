@@ -79,7 +79,7 @@ resource sqlserver 'Microsoft.Sql/servers@2021-02-01-preview' = {
       administratorType: 'ActiveDirectory'
       azureADOnlyAuthentication: true
       login: aadUsername
-      principalType: 'Application'
+      principalType: 'User'
       sid: aadSid
       tenantId: tenant().tenantId
     }
