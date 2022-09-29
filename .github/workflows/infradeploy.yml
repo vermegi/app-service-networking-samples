@@ -32,6 +32,11 @@ jobs:
          resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
          template: ./deploy/main.bicep
          parameters: name=${{ env.AZURE_RESOURCEGROUP_NAME }} aadUsername=${{ secrets.AAD_USERNAME }} aadSid=${{ secrets.AAD_SID }} 
+     - name: Azure CLI script
+       uses: azure/CLI@v1
+       with:
+         inlineScript: |
+           az webapp connection create sql -g ${{ env.AZURE_RESOURCEGROUP_NAME }} -n ${{ steps.deploy.outputs.webSiteHostName }} --tg ${{ env.AZURE_RESOURCEGROUP_NAME }} --server ${{ steps.deploy.outputs.sqlserverName }} --database ${{ steps.deploy.outputs.databaseName }}
   # database-updates:
   #   runs-on: ubuntu-latest
   #   needs: deploy-infra
